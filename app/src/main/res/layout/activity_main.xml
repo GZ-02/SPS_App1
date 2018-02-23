@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.georgia.sps_app1.MainActivity">
+
+    <TextView
+        android:id="@+id/Activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="@string/Activity" />
+
+    <ImageView
+        android:id="@+id/Cell1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/Activity"
+        android:layout_marginBottom="42dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp"
+        android:layout_toEndOf="@+id/human"
+        android:layout_toRightOf="@+id/human"
+        app:srcCompat="@drawable/square" />
+
+    <ImageView
+        android:id="@+id/Cell2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/Cell1"
+        android:layout_toEndOf="@+id/Cell1"
+        android:layout_toRightOf="@+id/Cell1"
+        app:srcCompat="@drawable/square" />
+
+    <ImageView
+        android:id="@+id/Cell3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/Cell2"
+        android:layout_toEndOf="@+id/Cell2"
+        android:layout_toRightOf="@+id/Cell2"
+        app:srcCompat="@drawable/square" />
+
+    <ImageView
+        android:id="@+id/Cell4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/Cell3"
+        android:layout_toEndOf="@+id/Cell3"
+        android:layout_toRightOf="@+id/Cell3"
+        app:srcCompat="@drawable/square" />
+
+    <TextView
+        android:id="@+id/c1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/Cell2"
+        android:layout_alignLeft="@+id/Cell1"
+        android:layout_alignStart="@+id/Cell1"
+        android:layout_marginLeft="32dp"
+        android:text="@string/cell1" />
+
+    <TextView
+        android:id="@+id/c2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/Cell2"
+        android:layout_marginEnd="31dp"
+        android:layout_marginRight="31dp"
+        android:layout_toLeftOf="@+id/Cell3"
+        android:layout_toStartOf="@+id/Cell3"
+        android:text="@string/cell2" />
+
+    <TextView
+        android:id="@+id/c4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/Cell3"
+        android:layout_marginLeft="33dp"
+        android:layout_marginStart="33dp"
+        android:layout_toEndOf="@+id/c3"
+        android:layout_toRightOf="@+id/c3"
+        android:text="@string/cell4" />
+
+    <TextView
+        android:id="@+id/c3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/Cell3"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/Cell4"
+        android:layout_toStartOf="@+id/Cell4"
+        android:text="@string/cell3" />
+
+    <ImageView
+        android:id="@+id/human"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/c1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="21dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
+        app:srcCompat="@drawable/human" />
+
+</RelativeLayout>
