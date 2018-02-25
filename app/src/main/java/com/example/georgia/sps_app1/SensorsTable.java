@@ -13,6 +13,8 @@ public class SensorsTable {
     private String _accVal2;
     private String _SSID;
     private String _RSSI;
+    private String cellNo;
+    private String action;
 
     //Class constructor
     public SensorsTable(){
@@ -20,6 +22,14 @@ public class SensorsTable {
 
     //Methods to set and get table variables
 
+
+    public void setCellNo(String cellNo) {
+        this.cellNo = cellNo;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
 
     public void setLocalTime(String localTime) {
         LocalTime = localTime;
@@ -99,5 +109,13 @@ public class SensorsTable {
 
     public String get_RSSI() {
         return _RSSI;
+    }
+
+    public String getCellNo() {
+        return cellNo;
+    }
+
+    public String getAction() {
+        return action;
     }
 }

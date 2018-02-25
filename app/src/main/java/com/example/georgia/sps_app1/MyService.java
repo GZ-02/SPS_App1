@@ -13,23 +13,25 @@ import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MyService extends Service {
 
-    public String TAG="com.example.georgia.sps_app1";
-    private  String date;
-    private String deviceId,manuf,model;
+    private  String date,deviceId,manuf,model,cell,activity;
     private SensorManager mySensorManager;
     private SensorEventListener mySensorEventListener;
     private Sensor accelerometer;
     private WifiManager wifiManager;
     private WifiInfo wifiInfo;
     private float aX = 0, aY=0, aZ=0;
-    MyDbHandler myDbHandler;
     SensorsTable myTable=new SensorsTable();
+    public String TAG="com.example.georgia.sps_app1";
+    MyDbHandler myDbHandler;
+
 
 
     public MyService() {
@@ -37,31 +39,31 @@ public class MyService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        // TODO: Return the communication channel to the service.
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        Log.i(TAG,"Service started");
+        cell=intent.getStringExtra("cell");
+        activity=intent.getStringExtra("activity");
         myDbHandler=new MyDbHandler(this,null,null,1);
-        mySensorManager=(SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        mySensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         // Set the wifi manager
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         mySensorEventListener=new SensorEventListener() {
-            //Methods used to enact SensorEventLIstener
             @Override
             public void onSensorChanged(SensorEvent event) {
-                Log.i(TAG,"Sensor event realised");
-                SimpleDateFormat sdf=new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                date=sdf.format(new Date());
-                manuf= Build.MANUFACTURER;
-                model=Build.MODEL;
-                String modelName= manuf+" "+model;
+                Log.i(TAG, "Sensor event realised");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                date = sdf.format(new Date());
+                manuf = Build.MANUFACTURER;
+                model = Build.MODEL;
+                String modelName = manuf + " " + model;
                 myTable.set_modelName(modelName);
                 myTable.set_tmst(date);
-                deviceId= Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                 myTable.set_deviceId(deviceId);
 
                 // get the the x,y,z values of the accelerometer
@@ -75,19 +77,21 @@ public class MyService extends Service {
                 // get the wifi info.
                 wifiInfo = wifiManager.getConnectionInfo();
                 // update the text.
-                myTable.set_SSID( wifiInfo.getSSID());
+                myTable.set_SSID(wifiInfo.getSSID());
                 myTable.set_RSSI(Integer.toString(wifiInfo.getRssi()));
                 myTable.setLocalTime(Long.toString(System.currentTimeMillis()));
+                myTable.setCellNo(cell);
+                myTable.setAction(activity);
                 myDbHandler.addRow(myTable);
                 mySensorManager.unregisterListener(mySensorEventListener);
-               stopSelf();
+                stopSelf();
             }
 
             @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            public void onAccuracyChanged(Sensor sensor, int i) {
+
             }
         };
-
 
         // if the default accelerometer exists
         if (mySensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
@@ -95,14 +99,6 @@ public class MyService extends Service {
             accelerometer = mySensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             mySensorManager.registerListener(mySensorEventListener,accelerometer,SensorManager.SENSOR_DELAY_NORMAL);
         }
-        return Service.START_STICKY;
-    }
-
-
-
-    @Override
-    public void onDestroy() {
-        Log.i(TAG,"Service destroyed");
-        super.onDestroy();
+        return START_STICKY;
     }
 }

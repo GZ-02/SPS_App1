@@ -1,5 +1,6 @@
 package com.example.georgia.sps_app1;
 
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,7 +10,9 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.File;
@@ -17,15 +20,18 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity{
 
     //Declaration of variables
-    public TextView action;
     private AlarmManager myAlarm;
     private PendingIntent myIntent;
+    private static final long INTERVAL=5*1000L;
     public String TAG="com.example.georgia.sps_app1";
-    private static final long INTERVAL= 30*1000L ;
+    public String cell,activity;
     MyDbHandler myDbHandler;
+    public TextView action;
+    EditText txt1,txt2;
 
 
     @Override
@@ -33,36 +39,36 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.i(TAG,"App started");
+
         //Line to keep screen on permanently
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        txt1=(EditText)findViewById(R.id.CellNo);
+        txt2=(EditText)findViewById(R.id.action);
+        action=(TextView)findViewById(R.id.Activity);
         myDbHandler=new MyDbHandler(this,null,null,1);
         createDirectory();
-        action=(TextView)findViewById(R.id.Activity);
-        Log.i(TAG,"App started");
-
-        //Set repeating alarm every 30 seconds
-        myAlarm=(AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent i = new Intent(this,MyService.class);
-        myIntent=PendingIntent.getService(this,0,i,PendingIntent.FLAG_UPDATE_CURRENT);
-        myAlarm.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(),INTERVAL,myIntent);
-
     }
+
 
     public void cancelAlarm(){
         if(myAlarm!=null){
             myAlarm.cancel(myIntent);
         }
+
     }
 
+    public void ButtonClicked(View view) {
+        activity=txt2.getText().toString();
+        cell=txt1.getText().toString();
 
-    @Override
-    protected void onStop() {
-        cancelAlarm();
-        if (isExternalStorageWritable() && fileExistsCheck()){
-            addToFile();
-        }
-        super.onStop();
+        myAlarm=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(this,MyService.class);
+        i.putExtra("cell",cell);
+        i.putExtra("activity",activity);
+        myIntent=PendingIntent.getService(this,0,i,PendingIntent.FLAG_UPDATE_CURRENT);
+        myAlarm.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(),INTERVAL,myIntent);
     }
 
 
@@ -110,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         FileOutputStream outputStream;
         String filename="CollectedData.txt";
         String myString="COLUMN_ID,COLUMN_DEVICEID,COLUMN_MODEL,COLUMN_TIMESTAMP,COLUMN_ACCELEROMETER0,COLUMN_ACCELEROMETER1,COLUMN_ACCELEROMETER2,COLUMN_SSID," +
-                "COLUMN_RSSI,COLUMN_LOCALTIME \n";
+                "COLUMN_RSSI,COLUMN_LOCALTIME,COLUMN_CELLNUMBER,COLUMN_ACTION \n";
         try{
             myFile=new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/SmartPhoneSensing/",filename);
             outputStream=new FileOutputStream(myFile);
@@ -142,5 +148,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onStop() {
+        Log.i(TAG,"App was stopped.");
+        if (isExternalStorageWritable()  && fileExistsCheck()){
+            addToFile();
+        }
+        cancelAlarm();
+        action.setText("Done");
+        super.onStop();
+    }
 }

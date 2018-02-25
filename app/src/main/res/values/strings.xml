@@ -5,5 +5,8 @@
     <string name="cell2">Cell B</string>
     <string name="cell3">Cell C</string>
     <string name="cell4">Cell D</string>
+    <string name="cellNo">Cell No</string>
+    <string name="action">Action</string>
+    <string name="sample">Sample</string>
 
 </resources>

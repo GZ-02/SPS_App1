@@ -24,6 +24,8 @@ public class MyDbHandler extends SQLiteOpenHelper {
     private static final String COLUMN_SSID="ssid";
     private static final String COLUMN_RSSI="rssi";
     private static final String COLUMN_LOCTIME="localTime";
+    private static final String COLUMN_CELL="cellNumber";
+    private static final String COLUMN_ACTIVITY="action";
     private String TAG="com.example.georgia.sps_app1";
 
 
@@ -41,7 +43,8 @@ public class MyDbHandler extends SQLiteOpenHelper {
                 COLUMN_TIMESTAMP + " TEXT NULL," + COLUMN_MODEL + " TEXT NULL," +
                 COLUMN_ACCVAL0  + " TEXT NULL," +
                 COLUMN_ACCVAL1 + " TEXT NULL," + COLUMN_ACCVAL2 + " TEXT NULL," +
-                COLUMN_SSID + " TEXT NULL," + COLUMN_RSSI + " TEXT NULL," + COLUMN_LOCTIME +" TEXT NULL" + ");";
+                COLUMN_SSID + " TEXT NULL," + COLUMN_RSSI + " TEXT NULL," + COLUMN_LOCTIME +" TEXT NULL," + COLUMN_CELL +
+                " TEXT NULL," + COLUMN_ACTIVITY +" TEXT NULL" + ");";
         Log.i(TAG,query);
         db.execSQL(query);
     }
@@ -69,6 +72,8 @@ public class MyDbHandler extends SQLiteOpenHelper {
         values.put(COLUMN_SSID,snst.get_SSID());
         values.put(COLUMN_RSSI,snst.get_RSSI());
         values.put(COLUMN_LOCTIME,snst.getLocalTime());
+        values.put(COLUMN_CELL,snst.getCellNo());
+        values.put(COLUMN_ACTIVITY,snst.getAction());
         long g=db.insert(TABLE_NAME, null, values);
         Log.i(TAG,String.valueOf(g));
 
@@ -82,14 +87,6 @@ public class MyDbHandler extends SQLiteOpenHelper {
     }
 
 
-    public int numOfRows(){
-        SQLiteDatabase db=getReadableDatabase();
-        String query="SELECT  * FROM " + TABLE_NAME;
-        Cursor c=db.rawQuery(query,null);
-        int count=c.getCount();
-        c.close();
-        return count;
-    }
 
     public void deleteAll(){
         SQLiteDatabase db=getWritableDatabase();
@@ -123,7 +120,6 @@ public class MyDbHandler extends SQLiteOpenHelper {
             dbString+=" , ";
             dbString+=c.getString(c.getColumnIndex(COLUMN_TIMESTAMP));
             dbString+=" , ";
-            dbString+=" , ";
             dbString+=c.getString(c.getColumnIndex(COLUMN_MODEL));
             dbString+=" , ";
             dbString+=c.getString(c.getColumnIndex(COLUMN_ACCVAL0));
@@ -137,6 +133,10 @@ public class MyDbHandler extends SQLiteOpenHelper {
             dbString+=c.getString(c.getColumnIndex(COLUMN_RSSI));
             dbString+=" , ";
             dbString+=c.getString(c.getColumnIndex(COLUMN_LOCTIME));
+            dbString+=" , ";
+            dbString+=c.getString(c.getColumnIndex(COLUMN_CELL));
+            dbString+=" , ";
+            dbString+=c.getString(c.getColumnIndex(COLUMN_ACTIVITY));
             dbString+="\n";
         }while(c.moveToNext());
         c.close();
